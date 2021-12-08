@@ -18,12 +18,13 @@ def main():
 
     # Set Sidebar
     st.sidebar.title('Navigation onglet')
-    #     st.sidebar.title('Generals filters')
+    st.sidebar.title('Generals filters')
     #     sel_country = st.sidebar.multiselect('Select country', sorted(df['Nation'].unique()))
     #     sel_league = st.sidebar.multiselect('Select league', sorted(df['League'].unique()))
     #     sel_team = st.sidebar.multiselect('Select team', sorted(df['Squad'].unique()))
     #     sel_player = st.sidebar.multiselect('Select player', sorted(df['Player']))
-    #     slider_games = st.sidebar.slider('Played Minutes', float(df['Minutes played divided by 90'].min()), float(df['Minutes played divided by 90'].max()), (float(df['Minutes played divided by 90'].min()), float(df['Minutes played divided by 90'].max())))
+    slider_games = st.sidebar.slider('Time on Ice', float(df['timeOnIce'].min()), float(df['timeOnIce'].max()),
+                                     (float(df['timeOnIce'].min()), float(df['timeOnIce'].max())))
     #     st.sidebar.title('Graphics options')
     #     st.sidebar.write('\n')
     #     check_label = st.sidebar.checkbox('With labels')
@@ -35,9 +36,9 @@ def main():
     #     df_team = multi_filter(df, sel_team, 'Squad')
     #     df_player = multi_filter(df, sel_player, 'Player')
     #
-    #     df_games = df[df['Minutes played divided by 90'].between(slider_games[0],slider_games[1])]
+    df_time_on_ice = df[df['timeOnIce'].between(slider_games[0], slider_games[1])]
     #
-    #     general_select = df[df.isin(df_country) & df.isin(df_league) & df.isin(df_team) & df.isin(df_player) & df.isin(df_games)].dropna()
+    general_select = df[df.isin(df_time_on_ice)].dropna()
     #
 
     # Page
@@ -49,7 +50,7 @@ def main():
 
     y_cols = 'uid'
 
-    df_acp, n, p, acp_, coord, eigval = tls.acp(df=df, X=X_cols, y=y_cols)
+    df_acp, n, p, acp_, coord, eigval = tls.acp(df=general_select, X=X_cols, y=y_cols)
 
     if len(X_cols) > 0:
         if n >= p:
@@ -60,7 +61,7 @@ def main():
             df_near = tls.get_indices_of_nearest_neighbours(df_acp, coord, nb_simi + 1)
             recos = tls.same_reco(df_near, sel_simi)
 
-            df_reco_final = tls.make_df_reco_final(df, sel_simi, recos, X_cols)
+            df_reco_final = tls.make_df_reco_final(general_select, sel_simi, recos, X_cols)
             st.write('\n')
             st.title("Données des joueurs recommandées")
             st.write('\n')
