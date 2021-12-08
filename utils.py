@@ -57,7 +57,7 @@ class Tools:
         data_reco = df_select[df_select['uid'].isin(df_reco)].drop_duplicates(subset=['uid'])
         data_reco_sort = data_reco.set_index('uid').loc[df_reco].reset_index()
         df_reco_final = pd.concat([data_reco_sel, data_reco_sort]).reset_index().drop("index", axis=1)
-        df_reco_final = df_reco_final[['uid'] + X_sel]
+        df_reco_final = df_reco_final[X_sel]
         return df_reco_final
 
     @staticmethod
