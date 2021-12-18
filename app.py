@@ -15,15 +15,14 @@ def main():
     df = tls.prepare_data()
 
     # Set Sidebar
-    st.sidebar.title('Navigation onglet')
     st.sidebar.title('Generals filters')
-    slider_games = st.sidebar.slider('Time on Ice', float(df['timeOnIce'].min()), float(df['timeOnIce'].max()),
-                                     (float(df['timeOnIce'].min()), float(df['timeOnIce'].max())))
+    slider_games = st.sidebar.slider('Number of games played', float(df['nb_match'].min()), float(df['nb_match'].max()),
+                                     (float(df['nb_match'].min()), float(df['nb_match'].max())))
     # Configure generals filters
-    df_time_on_ice = df[df['timeOnIce'].between(slider_games[0], slider_games[1])]
-    general_select = df[df.isin(df_time_on_ice)].dropna()
+    df_nb_match = df[df['nb_match'].between(slider_games[0], slider_games[1])]
+    general_select = df[df.isin(df_nb_match)].dropna()
 
-    X_cols = ['timeOnIce', 'assists', 'goals', 'shots', 'hits', 'powerPlayGoals', 'powerPlayAssists',
+    X_cols = ['nb_match', 'assists', 'goals', 'shots', 'hits', 'powerPlayGoals', 'powerPlayAssists',
               'penaltyMinutes', 'faceOffWins', 'faceoffTaken', 'takeaways', 'giveaways',
               'shortHandedGoals', 'shortHandedAssists', 'blocked', 'plusMinus', 'evenTimeOnIce',
               'shortHandedTimeOnIce', 'powerPlayTimeOnIce']

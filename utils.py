@@ -21,6 +21,7 @@ class Tools:
         df_game_skater_stats = df_game_skater_stats.drop(['game_id', 'team_id'], 1)
         df_game_skater_stats_agg = df_game_skater_stats.groupby(['player_id', 'game_year'], as_index=False).sum()
         df_game_skater_stats_agg['timeOnIce'] = df_game_skater_stats_agg['timeOnIce'] / 3600
+        df_game_skater_stats_agg.rename(columns={'timeOnIce': 'nb_match'}, inplace=True)
 
         final = df_game_skater_stats_agg.merge(df_player_info, how='left', on='player_id')
         final['uid'] = final['player_name'] + '_' + final['game_year'].astype(str) + '_' + final['player_id'].astype(
