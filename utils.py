@@ -9,6 +9,25 @@ from scipy import spatial
 
 class Tools:
     @staticmethod
+    @st.cache
+    def prepare_data():
+        df_player_info = pd.read_csv('data/player_info.csv')
+        df_player_info['player_name'] = df_player_info['firstName'] + '_' + df_player_info['lastName']
+        df_player_info['birth_year'] = df_player_info['birthDate'].str[:4].astype(int)
+        df_player_info = df_player_info[['player_id', 'player_name']]
+
+        df_game_skater_stats = pd.read_csv('data/game_skater_stats.csv')
+        df_game_skater_stats['game_year'] = df_game_skater_stats['game_id'].astype(str).str[:4].astype(int)
+        df_game_skater_stats = df_game_skater_stats.drop(['game_id', 'team_id'], 1)
+        df_game_skater_stats_agg = df_game_skater_stats.groupby(['player_id', 'game_year'], as_index=False).sum()
+        df_game_skater_stats_agg['timeOnIce'] = df_game_skater_stats_agg['timeOnIce'] / 3600
+
+        final = df_game_skater_stats_agg.merge(df_player_info, how='left', on='player_id')
+        final['uid'] = final['player_name'] + '_' + final['game_year'].astype(str) + '_' + final['player_id'].astype(
+            str)
+        return final
+
+    @staticmethod
     def multi_filter(df, sel, var):
         if len(sel) == 0:
             df_sel = df

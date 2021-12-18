@@ -14,50 +14,32 @@ def main():
     )
 
     # Load Data
-    df = pd.read_csv('data.csv')
+    df = tls.prepare_data()
 
     # Set Sidebar
     st.sidebar.title('Navigation onglet')
     st.sidebar.title('Generals filters')
-    #     sel_country = st.sidebar.multiselect('Select country', sorted(df['Nation'].unique()))
-    #     sel_league = st.sidebar.multiselect('Select league', sorted(df['League'].unique()))
-    #     sel_team = st.sidebar.multiselect('Select team', sorted(df['Squad'].unique()))
-    #     sel_player = st.sidebar.multiselect('Select player', sorted(df['Player']))
     slider_games = st.sidebar.slider('Time on Ice', float(df['timeOnIce'].min()), float(df['timeOnIce'].max()),
                                      (float(df['timeOnIce'].min()), float(df['timeOnIce'].max())))
-    #     st.sidebar.title('Graphics options')
-    #     st.sidebar.write('\n')
-    #     check_label = st.sidebar.checkbox('With labels')
-    #     by_color = st.sidebar.selectbox('Color by', ['None', 'Nation', 'League', 'Squad'])
-    #
-    # # Configure generals filters
-    #     df_country = multi_filter(df, sel_country, 'Nation')
-    #     df_league = multi_filter(df, sel_league, 'League')
-    #     df_team = multi_filter(df, sel_team, 'Squad')
-    #     df_player = multi_filter(df, sel_player, 'Player')
-    #
+    # Configure generals filters
     df_time_on_ice = df[df['timeOnIce'].between(slider_games[0], slider_games[1])]
-    #
     general_select = df[df.isin(df_time_on_ice)].dropna()
-    #
-
-    # Page
 
     X_cols = ['timeOnIce', 'assists', 'goals', 'shots', 'hits', 'powerPlayGoals', 'powerPlayAssists',
               'penaltyMinutes', 'faceOffWins', 'faceoffTaken', 'takeaways', 'giveaways',
               'shortHandedGoals', 'shortHandedAssists', 'blocked', 'plusMinus', 'evenTimeOnIce',
-              'shortHandedTimeOnIce', 'powerPlayTimeOnIce', 'birth_year', 'height_cm', 'weight']
+              'shortHandedTimeOnIce', 'powerPlayTimeOnIce']
 
-    y_cols = 'uid'
+    y_col = 'uid'
 
-    df_acp, n, p, acp_, coord, eigval = tls.acp(df=general_select, X=X_cols, y=y_cols)
+    df_acp, n, p, acp_, coord, eigval = tls.acp(df=general_select, X=X_cols, y=y_col)
 
     if len(X_cols) > 0:
         if n >= p:
             st.title('Recommandateur')
             sel_simi = st.selectbox(' Joueur que tu aimes', sorted(df_acp.index))
             nb_simi = st.number_input("Nombre de joueurs les plus ressemblants", min_value=1, max_value=n - 1,
-                                       value=3)
+                                      value=3)
             df_near = tls.get_indices_of_nearest_neighbours(df_acp, coord, nb_simi + 1)
             recos = tls.same_reco(df_near, sel_simi)
 
@@ -76,7 +58,8 @@ def main():
     st.write("\n")
     st.write("\n")
     st.info("""By : Ligue des Datas [Instagram](https://www.instagram.com/ligueddatas/) 
-    | Data source : [Sport Reference Data](https://www.sports-reference.com/)""")
+            | Data source : [NHL](https://www.nhl.com/)""")
+
 
 if __name__ == "__main__":
     main()
