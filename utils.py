@@ -28,14 +28,6 @@ class Tools:
         return final
 
     @staticmethod
-    def multi_filter(df, sel, var):
-        if len(sel) == 0:
-            df_sel = df
-        elif len(sel) != 0:
-            df_sel = df[df[var].isin(sel)]
-        return df_sel
-
-    @staticmethod
     def acp(df, X, y):
         X.append(y)
         df_acp = df[X].groupby(y).mean()
@@ -78,9 +70,3 @@ class Tools:
         df_reco_final = pd.concat([data_reco_sel, data_reco_sort]).reset_index().drop("index", axis=1)
         df_reco_final = df_reco_final[X_sel]
         return df_reco_final
-
-    @staticmethod
-    def var_pre_selection(pre_list, name, list_var, num_col):
-        if num_col.checkbox(name, True):
-            pre_list.extend(list_var)
-        return pre_list
