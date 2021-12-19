@@ -91,7 +91,7 @@ class Tools:
     @staticmethod
     def make_df_reco_final(df_select, sel_player, df_reco, X_sel):
         """
-
+        Make dataframe reco
         :param df_select: pd.DataFrame. Initial dataset from prepare_data()
         :param sel_player: string. Selected player
         :param df_reco: pd.DataFrame. Dataset from same_reco()
