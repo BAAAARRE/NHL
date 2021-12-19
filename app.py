@@ -42,7 +42,7 @@ def main():
 
             df_reco_final = tls.make_df_reco_final(general_select, sel_simi, recos, X_cols)
             st.write('\n')
-            st.title("Données des joueurs recommandées")
+            st.title("Données des joueurs recommandés")
             st.write('\n')
             st.dataframe(df_reco_final)
 
