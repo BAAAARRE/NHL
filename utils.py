@@ -85,7 +85,7 @@ class Tools:
             res.append(df[df[0] == ind].iloc[:, i].to_string()[5:].lstrip())
         res = res[1:]
         for i in range(len(res)):
-            st.write('Joueurs ressemblant n°' + str(i + 1) + ' : ' + res[i])
+            st.write('Joueur ressemblant n°' + str(i + 1) + ' : ' + res[i])
         return res
 
     @staticmethod
